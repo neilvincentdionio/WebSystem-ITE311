@@ -6,11 +6,10 @@
     <title>CodeIgniter + Bootstrap</title>
 
     <!-- Bootstrap CSS (via CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
-<!-- Bootstrap Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">My CI4 App</a>
@@ -30,13 +29,11 @@
     </div>
 </nav>
 
-<!-- Page Content -->
 <div class="container mt-5">
     <h1>Welcome to CodeIgniter 4 + Bootstrap</h1>
     <p>This is a simple template using Bootstrap.</p>
 </div>
 
-<!-- Bootstrap JS Bundle (with Popper) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
