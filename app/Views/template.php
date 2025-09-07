@@ -34,6 +34,20 @@
                     <a class="nav-link <?= url_is('contact') ? 'active' : '' ?>" href="<?= base_url('contact') ?>">Contact</a>
                 </li>
             </ul>
+
+            <!-- Auth Buttons (right side) -->
+            <div class="d-flex">
+                <?php if (session()->get('logged_in')): ?>
+                    <span class="navbar-text text-white me-3">
+                        <?= esc(session()->get('name')) ?> (<?= esc(session()->get('role')) ?>)
+                    </span>
+                    <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-light me-2">Dashboard</a>
+                    <a href="<?= base_url('auth/logout') ?>" class="btn btn-danger">Logout</a>
+                <?php else: ?>
+                    <a href="<?= base_url('auth/register') ?>" class="btn btn-outline-light me-2">Register</a>
+                    <a href="<?= base_url('auth/login') ?>" class="btn btn-primary">Login</a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </nav>
