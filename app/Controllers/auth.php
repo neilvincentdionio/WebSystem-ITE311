@@ -56,7 +56,7 @@ class Auth extends BaseController
         $user = $userModel->where('email', $email)->first();
 
         if ($user && password_verify($password, $user['password'])) {
-            // ✅ Set session data
+            // Set session data
             $sessionData = [
                 'id'        => $user['id'],
                 'name'      => $user['name'],
@@ -76,5 +76,20 @@ class Auth extends BaseController
     {
         session()->destroy();
         return redirect()->to('/auth/login')->with('success', 'You have been logged out.');
+    }
+
+    public function dashboard()
+    {
+        $session = session();
+
+        //  Manual check (no filters needed)
+        if (! $session->get('isLoggedIn')) {
+            return redirect()->to('/auth/login')->with('error', 'Please login first.');
+        }
+
+        return view('auth/dashboard', [
+            'title' => 'User Dashboard',
+            'user'  => $session->get(), // pass all session data
+        ]);
     }
 }

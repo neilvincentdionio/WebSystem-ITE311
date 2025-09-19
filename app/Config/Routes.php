@@ -11,7 +11,7 @@ $routes->get('/', 'Home::index');
 $routes->get('about', 'Home::about');
 $routes->get('contact', 'Home::contact');
 
-// Authentication
+/// Authentication
 $routes->group('auth', function ($routes) {
     $routes->get('register', 'Auth::register');        // Show register form
     $routes->post('register', 'Auth::registerPost');   // Handle register
@@ -19,8 +19,8 @@ $routes->group('auth', function ($routes) {
     $routes->get('login', 'Auth::login');              // Show login form
     $routes->post('login', 'Auth::loginPost');         // Handle login
 
-    $routes->get('logout', 'Auth::logout');            // Logout user
+    $routes->get('logout', 'Auth::logout');    
 });
 
-// Dashboard (protected by Auth filter)
-$routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
+// Dashboard
+$routes->get('dashboard', 'Auth::dashboard');

@@ -13,7 +13,7 @@
         }
         .sidebar {
             width: 200px;
-            background-color: #0d6efd;
+            background-color: #3a3a3bff;
             color: white;
             flex-shrink: 0;
             display: flex;
@@ -45,7 +45,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <h4>LMS</h4>
+        <h4>LMS DASHBOARD</h4>
         <a href="<?= base_url('dashboard') ?>" class="nav-link">Dashboard</a>
         <a href="<?= base_url('auth/logout') ?>" class="nav-link ">Logout</a>
     </div>
