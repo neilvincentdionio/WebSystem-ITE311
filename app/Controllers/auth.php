@@ -8,68 +8,70 @@ class Auth extends BaseController
 {
     public function register()
     {
-        return view('auth/register');
-    }
+        // Handle POST request (registration submission)
+        if ($this->request->getMethod() === 'POST') {
+            $validation = \Config\Services::validation();
+            $userModel  = new UserModel();
 
-    public function registerPost()
-    {
-        $validation = \Config\Services::validation();
-        $userModel  = new UserModel();
+            $rules = [
+                'name'         => 'required|min_length[3]',
+                'email'        => 'required|valid_email|is_unique[users.email]',
+                'password'     => 'required|min_length[6]',
+                'pass_confirm' => 'required|matches[password]',
+                'role'         => 'required|in_list[student,instructor,admin]',
+            ];
 
-        $rules = [
-            'name'         => 'required|min_length[3]',
-            'email'        => 'required|valid_email|is_unique[users.email]',
-            'password'     => 'required|min_length[6]',
-            'pass_confirm' => 'required|matches[password]',
-            'role'         => 'required|in_list[student,instructor,admin]',
-        ];
+            if (! $this->validate($rules)) {
+                return view('auth/register', [
+                    'validation' => $validation,
+                ]);
+            }
 
-        if (! $this->validate($rules)) {
-            return view('auth/register', [
-                'validation' => $validation,
+            $userModel->save([
+                'name'     => $this->request->getPost('name'),
+                'email'    => $this->request->getPost('email'),
+                'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                'role'     => $this->request->getPost('role'),
             ]);
+
+            return redirect()->to('/auth/login')->with('success', 'Account created successfully! Please login.');
         }
 
-        $userModel->save([
-            'name'     => $this->request->getPost('name'),
-            'email'    => $this->request->getPost('email'),
-            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'role'     => $this->request->getPost('role'),
-        ]);
-
-        return redirect()->to('/auth/login')->with('success', 'Account created successfully! Please login.');
+        // Handle GET request (show registration form)
+        return view('auth/register');
     }
 
     public function login()
     {
-        return view('auth/login');
-    }
+        // Handle POST request (login submission)
+        if ($this->request->getMethod() === 'POST') {
+            $session   = session();
+            $userModel = new UserModel();
 
-    public function loginPost()
-    {
-        $session   = session();
-        $userModel = new UserModel();
+            $email    = $this->request->getPost('email');
+            $password = $this->request->getPost('password');
 
-        $email    = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
+            $user = $userModel->where('email', $email)->first();
 
-        $user = $userModel->where('email', $email)->first();
+            if ($user && password_verify($password, $user['password'])) {
+                // Set session data
+                $sessionData = [
+                    'id'        => $user['id'],
+                    'name'      => $user['name'],
+                    'email'     => $user['email'],
+                    'role'      => $user['role'],
+                    'isLoggedIn'=> true,
+                ];
+                $session->set($sessionData);
 
-        if ($user && password_verify($password, $user['password'])) {
-            // Set session data
-            $sessionData = [
-                'id'        => $user['id'],
-                'name'      => $user['name'],
-                'email'     => $user['email'],
-                'role'      => $user['role'],
-                'isLoggedIn'=> true,
-            ];
-            $session->set($sessionData);
+                return redirect()->to('/dashboard')->with('success', 'Welcome back, ' . $user['name'] . '!');
+            }
 
-            return redirect()->to('/dashboard')->with('success', 'Welcome back, ' . $user['name'] . '!');
+            return redirect()->back()->with('error', 'Invalid email or password.');
         }
 
-        return redirect()->back()->with('error', 'Invalid email or password.');
+        // Handle GET request (show login form)
+        return view('auth/login');
     }
 
     public function logout()
@@ -82,7 +84,6 @@ class Auth extends BaseController
     {
         $session = session();
 
-        //  Manual check (no filters needed)
         if (! $session->get('isLoggedIn')) {
             return redirect()->to('/auth/login')->with('error', 'Please login first.');
         }
