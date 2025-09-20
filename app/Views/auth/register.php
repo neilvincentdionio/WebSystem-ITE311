@@ -72,12 +72,13 @@
                     <div class="mb-3">
                         <label class="form-label">Role</label>
                         <select name="role" class="form-select" required>
-                            <option value="" disabled selected>Select your role</option>
-                            <option value="student" <?= old('role') === 'student' ? 'selected' : '' ?>>Student</option>
-                            <option value="instructor" <?= old('role') === 'instructor' ? 'selected' : '' ?>>Instructor</option>
-                            <option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Admin</option>
-                        </select>
+                             <option value="" disabled selected>Select your role</option>
+                             <option value="student" <?= old('role') === 'student' ? 'selected' : '' ?>>Student</option>
+                             <option value="teacher" <?= old('role') === 'teacher' ? 'selected' : '' ?>>Teacher</option>
+                             <option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Admin</option>
+                         </select>
                     </div>
+
 
                     <button type="submit" class="btn btn-primary w-100">Register</button>
                 </form>

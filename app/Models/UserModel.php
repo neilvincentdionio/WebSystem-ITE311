@@ -18,9 +18,9 @@ class UserModel extends Model
     protected $returnType    = 'array';
 
     // Define roles (matching ENUM in migration)
-    public const ROLE_ADMIN      = 'admin';
-    public const ROLE_INSTRUCTOR = 'instructor';
-    public const ROLE_STUDENT    = 'student';
+    public const ROLE_ADMIN   = 'admin';
+    public const ROLE_TEACHER = 'teacher';
+    public const ROLE_STUDENT = 'student';
 
     /**
      * Check if a user has a specific role
@@ -37,9 +37,9 @@ class UserModel extends Model
         return $this->hasRole($userId, self::ROLE_ADMIN);
     }
 
-    public function isInstructor(int $userId): bool
+    public function isTeacher(int $userId): bool
     {
-        return $this->hasRole($userId, self::ROLE_INSTRUCTOR);
+        return $this->hasRole($userId, self::ROLE_TEACHER);
     }
 
     public function isStudent(int $userId): bool
