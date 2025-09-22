@@ -18,7 +18,7 @@ class Auth extends BaseController
                 'email'        => 'required|valid_email|is_unique[users.email]',
                 'password'     => 'required|min_length[6]',
                 'pass_confirm' => 'required|matches[password]',
-                'role'         => 'required|in_list[student,instructor,admin]',
+                'role'         => 'required|in_list[student,teacher,admin]', 
             ];
 
             if (! $this->validate($rules)) {
@@ -42,37 +42,56 @@ class Auth extends BaseController
     }
 
     public function login()
-    {
-        // Handle POST request (login submission)
-        if ($this->request->getMethod() === 'POST') {
-            $session   = session();
-            $userModel = new UserModel();
+{
+    if ($this->request->getMethod() === 'POST') {
+        $session   = session();
+        $userModel = new UserModel();
 
-            $email    = $this->request->getPost('email');
-            $password = $this->request->getPost('password');
+        $email    = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
 
-            $user = $userModel->where('email', $email)->first();
+        $user = $userModel->where('email', $email)->first();
 
-            if ($user && password_verify($password, $user['password'])) {
-                // Set session data
-                $sessionData = [
-                    'id'        => $user['id'],
-                    'name'      => $user['name'],
-                    'email'     => $user['email'],
-                    'role'      => $user['role'],
-                    'isLoggedIn'=> true,
-                ];
-                $session->set($sessionData);
+        if ($user && password_verify($password, $user['password'])) {
+            // Regenerate session to prevent fixation attacks
+            $session->regenerate();
 
-                return redirect()->to('/dashboard')->with('success', 'Welcome back, ' . $user['name'] . '!');
+            // Set session data
+            $sessionData = [
+                'id'        => $user['id'],
+                'name'      => $user['name'],
+                'email'     => $user['email'],
+                'role'      => $user['role'],
+                'isLoggedIn'=> true,
+            ];
+            $session->set($sessionData);
+
+            switch ($user['role']) {
+                case UserModel::ROLE_ADMIN:
+                    $redirectUrl = '/admin/dashboard';
+                    break;
+
+                case UserModel::ROLE_TEACHER:
+                    $redirectUrl = '/teacher/dashboard';
+                    break;
+
+                case UserModel::ROLE_STUDENT:
+                    $redirectUrl = '/student/dashboard';
+                    break;
+
+                default:
+                    $redirectUrl = '/dashboard'; // fallback
             }
 
-            return redirect()->back()->with('error', 'Invalid email or password.');
+            return redirect()->to($redirectUrl)->with('success', 'Welcome back, ' . $user['name'] . '!');
         }
 
-        // Handle GET request (show login form)
-        return view('auth/login');
+        return redirect()->back()->with('error', 'Invalid email or password.');
     }
+
+    return view('auth/login');
+}
+
 
     public function logout()
     {

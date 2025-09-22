@@ -21,8 +21,20 @@ $routes->group('auth', function ($routes) {
     $routes->get('login', 'Auth::login');               // Show login form
     $routes->post('login', 'Auth::login');              // Handle login submission
 
-    $routes->get('logout', 'Auth::logout');    
 });
 
-// Dashboard
+// Generic Dashboard (fallback)
 $routes->get('dashboard', 'Auth::dashboard');
+
+// Role-based Dashboard Routes using separate controllers
+$routes->get('admin/dashboard', 'Admin::dashboard');
+$routes->get('teacher/dashboard', 'Teacher::dashboard');
+$routes->get('student/dashboard', 'Student::dashboard');
+
+$routes->group('admin', function ($routes) {
+    $routes->get('dashboard', 'Admin::dashboard');
+    $routes->get('users', 'Admin::manageUsers');   
+    $routes->get('courses', 'Admin::manageCourses');
+    $routes->get('logout', 'Admin::logout');
+});
+
