@@ -13,13 +13,12 @@ $routes->get('contact', 'Home::contact');
 
 /// Authentication
 $routes->group('auth', function ($routes) {
-    // Register routes - both GET and POST handled by same method
-    $routes->get('register', 'Auth::register');         // Show register form
-    $routes->post('register', 'Auth::register');        // Handle register submission
-    
-    // Login routes - both GET and POST handled by same method
-    $routes->get('login', 'Auth::login');               // Show login form
-    $routes->post('login', 'Auth::login');              // Handle login submission
+$routes->get('login', 'Auth::login');        // Show login form
+$routes->post('login', 'Auth::login');       // Process login
+$routes->get('register', 'Auth::register');  // Show register form
+$routes->post('register', 'Auth::register'); // Process registration
+$routes->get('logout', 'Auth::logout');
+
 
 });
 
@@ -36,5 +35,15 @@ $routes->group('admin', function ($routes) {
     $routes->get('users', 'Admin::manageUsers');   
     $routes->get('courses', 'Admin::manageCourses');
     $routes->get('logout', 'Admin::logout');
+});
+
+$routes->group('teacher', function ($routes) {
+    $routes->get('dashboard', 'Teacher::dashboard');
+    $routes->get('create-course', 'Teacher::createCourse');
+    $routes->get('logout', 'Teacher::logout');
+});
+
+$routes->group('student', function ($routes) {
+    $routes->get('dashboard', 'Student::dashboard');
 });
 

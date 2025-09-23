@@ -41,9 +41,13 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <?= $this->include('admin/reusable/sidebar') ?>
-
+   <div class="sidebar d-flex flex-column">
+    <h4 class="p-3 border-bottom">Admin System</h4>
+    <a href="<?= site_url('admin/dashboard') ?>" class="bg-dark">Dashboard</a>
+    <a href="<?= site_url('admin/users') ?>">Manage Users</a>
+    <a href="<?= site_url('admin/courses') ?>">Manage Courses</a>
+    <a href="<?= site_url('admin/logout') ?>" class="mt-auto text-danger">Logout</a>
+</div>
     <!-- Content -->
     <div class="content">
         <h3 class="mb-4">Welcome, <?= esc($user['name'] ?? 'Admin') ?></h3>
