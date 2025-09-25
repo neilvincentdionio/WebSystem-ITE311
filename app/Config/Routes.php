@@ -21,4 +21,4 @@ $routes->group('auth', function ($routes) {
 });
 
 // Generic Dashboard (role-based) 
-$routes->get('dashboard', 'Auth::dashboard');
+$routes->get('/dashboard', 'Auth::dashboard');

@@ -1,4 +1,3 @@
-<!-- app/Views/auth/dashboard.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +6,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+
+    <!-- Include the dynamic navigation -->
+    <?= $this->include('templates/header') ?>
 
     <div class="container mt-4">
         <h2 class="mb-4">Welcome, <?= esc($user['name']) ?>!</h2>
