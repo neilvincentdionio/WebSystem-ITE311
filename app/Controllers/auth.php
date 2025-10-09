@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\EnrollmentModel;
+use App\Models\CourseModel;
 
 class Auth extends BaseController
 {
@@ -63,7 +65,6 @@ class Auth extends BaseController
                     'isLoggedIn'=> true,
                 ]);
 
-                // Redirect all users to the same dashboard
                 return redirect()->to('/dashboard')->with('success', 'Welcome back, ' . $user['name'] . '!');
             }
 
@@ -80,44 +81,57 @@ class Auth extends BaseController
     }
 
     public function dashboard()
-    {
-        $session = session();
+{
+    $session = session();
 
-        // Block access if not logged in
-        if (! $session->get('isLoggedIn')) {
-            return redirect()->to('/auth/login')->with('error', 'Please login first.');
-        }
-
-        $userModel = new UserModel();
-        $user      = $userModel->find($session->get('id')); // Fetch fresh user data
-        $role      = $user['role'];
-
-        // Default roleData
-        $roleData = [
-            'message' => '',
-            'users'   => [],
-            'myCourses' => [],
-            'enrolledCourses' => [],
-        ];
-
-        // Role-specific data
-        if ($role === 'admin') {
-            $roleData['message'] = 'You have full administrator access.';
-            $roleData['users']   = $userModel->findAll(); // only DB-backed data
-        } elseif ($role === 'teacher') {
-            $roleData['message']   = 'You can manage your classes and students here.';
-            $roleData['myCourses'] = []; // no DB yet
-        } elseif ($role === 'student') {
-            $roleData['message']          = 'You can view your enrolled courses and progress.';
-            $roleData['enrolledCourses']  = []; // no DB yet
-        }
-
-        // Load the unified dashboard view
-        return view('auth/dashboard', [
-            'title'    => 'User Dashboard',
-            'user'     => $user,
-            'role'     => $role,
-            'roleData' => $roleData,
-        ]);
+    if (! $session->get('isLoggedIn')) {
+        return redirect()->to('/auth/login')->with('error', 'Please login first.');
     }
+
+    $userModel       = new \App\Models\UserModel();
+    $enrollmentModel = new \App\Models\EnrollmentModel();
+    $db              = \Config\Database::connect();
+
+    $user = $userModel->find($session->get('id'));
+    $role = $user['role'];
+
+    // Default roleData
+    $roleData = [
+        'message'          => '',
+        'users'            => [],
+        'myCourses'        => [],
+        'enrolledCourses'  => [],
+        'availableCourses' => [],
+    ];
+
+    if ($role === 'admin') {
+        $roleData['message'] = 'You have full administrator access.';
+        $roleData['users']   = $userModel->findAll();
+    } elseif ($role === 'teacher') {
+        $roleData['message']   = 'You can manage your classes and students here.';
+        $roleData['myCourses'] = []; // Populate later if needed
+    } elseif ($role === 'student') {
+        $roleData['message'] = 'You can view your enrolled courses and progress.';
+
+        // Fetch enrolled courses
+        $roleData['enrolledCourses'] = $enrollmentModel->getUserEnrollments($user['id']);
+
+        // Fetch all courses directly from DB
+        $allCourses = $db->table('courses')->get()->getResultArray();
+
+        // Filter out enrolled courses to get available courses
+        $enrolledIds = array_column($roleData['enrolledCourses'], 'id');
+        $roleData['availableCourses'] = array_filter($allCourses, function($course) use ($enrolledIds) {
+            return !in_array($course['id'], $enrolledIds);
+        });
+    }
+
+    return view('auth/dashboard', [
+        'title'    => 'User Dashboard',
+        'user'     => $user,
+        'role'     => $role,
+        'roleData' => $roleData,
+    ]);
+}
+
 }

@@ -6,24 +6,31 @@ use CodeIgniter\Model;
 
 class EnrollmentModel extends Model
 {
-    protected $table            = 'enrollments';
-    protected $primaryKey       = 'id';
-    protected $allowedFields    = ['user_id', 'course_id', 'enrollment_date'];
-    protected $useTimestamps    = false;
+    protected $table = 'enrollments';
+    protected $primaryKey = 'id';
+    protected $allowedFields = ['user_id', 'course_id', 'enrolled_at'];
+
+    // Automatically manage timestamps (optional)
+    protected $useTimestamps = false;
 
     /**
      * Enroll a user in a course
      *
      * @param array $data
-     * @return bool
+     * @return bool|int  Insert ID or false if failed
      */
     public function enrollUser($data)
     {
+        // Check if already enrolled before inserting
+        if ($this->isAlreadyEnrolled($data['user_id'], $data['course_id'])) {
+            return false;
+        }
+
         return $this->insert($data);
     }
 
     /**
-     * Get all courses a user is enrolled in
+     * Get all courses a specific user is enrolled in
      *
      * @param int $user_id
      * @return array
@@ -37,7 +44,7 @@ class EnrollmentModel extends Model
     }
 
     /**
-     * Check if user is already enrolled in a specific course
+     * Check if a user is already enrolled in a specific course
      *
      * @param int $user_id
      * @param int $course_id

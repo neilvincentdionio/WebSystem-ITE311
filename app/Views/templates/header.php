@@ -50,7 +50,7 @@
                                 <a class="nav-link" href="<?= base_url('my_courses') ?>">My Courses</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('my_profile') ?>">My Profile</a>
+                                <a class="nav-link" href="<?= base_url('available_courses') ?>">Available Courses</a>
                             </li>
                         <?php endif; ?>
                     <?php endif; ?>

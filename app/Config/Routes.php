@@ -22,3 +22,12 @@ $routes->group('auth', function ($routes) {
 
 // Generic Dashboard (role-based) 
 $routes->get('/dashboard', 'Auth::dashboard');
+
+// Course Enrollment (AJAX)
+$routes->get('course/enroll', 'Course::enroll');
+$routes->post('/course/enroll', 'Course::enroll');
+
+
+
+
+
