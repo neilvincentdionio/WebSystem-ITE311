@@ -20,21 +20,25 @@ $routes->group('auth', function ($routes) {
     $routes->get('logout', 'Auth::logout');      // Logout
 });
 
-// Generic Dashboard (role-based) 
+// Generic Dashboard (role-based)
 $routes->get('/dashboard', 'Auth::dashboard');
 
-// Course Enrollment (AJAX)
-$routes->get('course/enroll', 'Course::enroll');
-$routes->post('/course/enroll', 'Course::enroll');
-
-
-// Student announcements page
+// Student announcements — must be accessible to all logged-in students
 $routes->get('/announcements', 'Announcement::index');
 
-// Teacher dashboard
-$routes->get('/teacher/dashboard', 'Teacher::dashboard');
+// Protected routes — apply RoleAuth filter
+$routes->group('admin', ['filter' => 'roleauth'], function ($routes) {
+    $routes->get('dashboard', 'Admin::dashboard');
+    // Add more admin-only routes here
+});
 
-// Admin dashboard
-$routes->get('/admin/dashboard', 'Admin::dashboard');
+$routes->group('teacher', ['filter' => 'roleauth'], function ($routes) {
+    $routes->get('dashboard', 'Teacher::dashboard');
+    // Add more teacher-only routes here
+});
 
+$routes->group('student', ['filter' => 'roleauth'], function ($routes) {
+    $routes->get('dashboard', 'Student::dashboard');
+    // Add more student-only routes here
+});
 

@@ -1,4 +1,4 @@
- <?= $this->include('templates/header') ?>
+<?= $this->include('templates/header') ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +12,13 @@
 <body>
     <div class="container mt-5">
         <h2 class="mb-4 text-center">📢 Announcements</h2>
+
+        <!-- Flash Message for Access Denied -->
+        <?php if(session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger text-center">
+                <?= session()->getFlashdata('error') ?>
+            </div>
+        <?php endif; ?>
 
         <?php if (!empty($announcements) && is_array($announcements)): ?>
             <div class="list-group">
@@ -27,7 +34,12 @@
             </div>
         <?php else: ?>
             <div class="alert alert-info text-center">
-                No announcements available.
+                <?php
+                    // Show default message if no announcements or access denied
+                    if(empty($announcements)) {
+                        echo 'No announcements available.';
+                    }
+                ?>
             </div>
         <?php endif; ?>
     </div>
