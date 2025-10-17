@@ -28,6 +28,3 @@ $routes->get('course/enroll', 'Course::enroll');
 $routes->post('/course/enroll', 'Course::enroll');
 
 
-
-
-
