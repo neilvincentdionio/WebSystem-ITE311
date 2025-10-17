@@ -28,3 +28,13 @@ $routes->get('course/enroll', 'Course::enroll');
 $routes->post('/course/enroll', 'Course::enroll');
 
 
+// Student announcements page
+$routes->get('/announcements', 'Announcement::index');
+
+// Teacher dashboard
+$routes->get('/teacher/dashboard', 'Teacher::dashboard');
+
+// Admin dashboard
+$routes->get('/admin/dashboard', 'Admin::dashboard');
+
+

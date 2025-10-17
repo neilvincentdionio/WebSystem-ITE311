@@ -42,37 +42,52 @@ class Auth extends BaseController
     }
 
     public function login()
-    {
-        if ($this->request->getMethod() === 'POST') {
-            $session   = session();
-            $userModel = new UserModel();
+{
+    if ($this->request->getMethod() === 'POST') {
+        $session   = session();
+        $userModel = new UserModel();
 
-            $email    = $this->request->getPost('email');
-            $password = $this->request->getPost('password');
+        $email    = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
 
-            $user = $userModel->where('email', $email)->first();
+        $user = $userModel->where('email', $email)->first();
 
-            if ($user && password_verify($password, $user['password'])) {
-                // Prevent session fixation attacks
-                $session->regenerate();
+        if ($user && password_verify($password, $user['password'])) {
+            // Prevent session fixation attacks
+            $session->regenerate();
 
-                // Set session data
-                $session->set([
-                    'id'        => $user['id'],
-                    'name'      => $user['name'],
-                    'email'     => $user['email'],
-                    'role'      => $user['role'],
-                    'isLoggedIn'=> true,
-                ]);
+            // Set session data
+            $session->set([
+                'id'         => $user['id'],
+                'name'       => $user['name'],
+                'email'      => $user['email'],
+                'role'       => $user['role'],
+                'isLoggedIn' => true,
+            ]);
 
-                return redirect()->to('/dashboard')->with('success', 'Welcome back, ' . $user['name'] . '!');
+            // Redirect based on user role
+            switch ($user['role']) {
+                case 'student':
+                    return redirect()->to('/announcements')
+                                     ->with('success', 'Welcome back, ' . $user['name'] . '!');
+                case 'teacher':
+                    return redirect()->to('/teacher/dashboard')
+                                     ->with('success', 'Welcome back, ' . $user['name'] . '!');
+                case 'admin':
+                    return redirect()->to('/admin/dashboard')
+                                     ->with('success', 'Welcome back, ' . $user['name'] . '!');
+                default:
+                    return redirect()->to('/dashboard')
+                                     ->with('success', 'Welcome back, ' . $user['name'] . '!');
             }
-
-            return redirect()->back()->with('error', 'Invalid email or password.');
         }
 
-        return view('auth/login');
+        return redirect()->back()->with('error', 'Invalid email or password.');
     }
+
+    return view('auth/login');
+}
+
 
     public function logout()
     {

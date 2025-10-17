@@ -52,6 +52,8 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('available_courses') ?>">Available Courses</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('announcements') ?>">Announcements</a>
                         <?php endif; ?>
                     <?php endif; ?>
                 </ul>
