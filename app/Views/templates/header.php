@@ -21,19 +21,18 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php $session = session(); ?>
                     <?php if ($session->get('isLoggedIn')): ?>
-                        <!-- Common link -->
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= base_url('dashboard') ?>">Dashboard</a>
+                            <?php $role = strtolower((string)$session->get('role')); $dashUrl = ($role === 'admin') ? 'admin/dashboard' : 'dashboard'; ?>
+                            <a class="nav-link" href="<?= base_url($dashUrl) ?>">Dashboard</a>
                         </li>
 
                         <!-- Admin links -->
                         <?php if ($session->get('role') === 'admin'): ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('manage_users') ?>">Manage Users</a>
+                                <a class="nav-link" href="<?= base_url('admin/courses') ?>">Manage Courses</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('system_settings') ?>">System Settings</a>
-                            </li>
+                            
+                          
 
                         <!-- Teacher links -->
                         <?php elseif ($session->get('role') === 'teacher'): ?>
@@ -47,13 +46,10 @@
                         <!-- Student links -->
                         <?php elseif ($session->get('role') === 'student'): ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('my_courses') ?>">My Courses</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('available_courses') ?>">Available Courses</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('announcements') ?>">Announcements</a>
+                            </li>   
+                            
+
                         <?php endif; ?>
                     <?php endif; ?>
                 </ul>

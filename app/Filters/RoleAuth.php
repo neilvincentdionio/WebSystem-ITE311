@@ -14,15 +14,15 @@ class RoleAuth implements FilterInterface
         
         // user logged in check
         if (!$session->get('isLoggedIn')) {
-            return redirect()->to('/login')->with('error', 'Please login first.');
+            return redirect()->to('/auth/login')->with('error', 'Please login first.');
         }
 
         // Get current role and page path
-        $role = $session->get('role'); 
+        $role = strtolower((string) $session->get('role'));
         $uri  = service('uri')->getPath();
 
         // Determine allowed role from route group
-        $allowedRole = $arguments[0] ?? null;
+        $allowedRole = isset($arguments[0]) ? strtolower((string) $arguments[0]) : null;
 
         //  Block access if role doesn’t match
         if ($allowedRole && $role !== $allowedRole) {

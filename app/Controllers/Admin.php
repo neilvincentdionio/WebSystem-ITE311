@@ -21,7 +21,30 @@ class Admin extends BaseController
             return redirect()->to('/announcements');
         }
 
-        // If logged in and role is admin, show dashboard
-        return view('admin_dashboard');
+        // Load courses for quick access to uploads
+        $db = \Config\Database::connect();
+        $courses = $db->table('courses')->orderBy('id', 'ASC')->get()->getResultArray();
+
+        // If logged in and role is admin, show dashboard with courses
+        return view('admin/admin_dashboard', [
+            'courses' => $courses,
+        ]);
+    }
+
+    public function courses()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn')) {
+            return redirect()->to('/auth/login');
+        }
+        if (strtolower($session->get('role')) !== 'admin') {
+            return redirect()->to('/announcements')->with('error', 'Access Denied: Insufficient Permissions');
+        }
+
+        $db = \Config\Database::connect();
+        $courses = $db->table('courses')->orderBy('id', 'ASC')->get()->getResultArray();
+        return view('admin/admin_courses', [
+            'courses' => $courses,
+        ]);
     }
 }

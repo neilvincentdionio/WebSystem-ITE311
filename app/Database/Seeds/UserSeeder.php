@@ -29,7 +29,8 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        // Insert multiple records into "users" table
-        $this->db->table('users')->insertBatch($data);
+        // Idempotent insert: skip duplicates for unique emails
+        $builder = $this->db->table('users');
+        $builder->ignore(true)->insertBatch($data);
     }
 }

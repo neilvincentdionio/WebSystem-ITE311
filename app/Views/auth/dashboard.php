@@ -66,7 +66,10 @@
                     <?php else: ?>
                         <ul class="list-group">
                             <?php foreach ($roleData['enrolledCourses'] as $course): ?>
-                                <li class="list-group-item"><?= esc($course['title']) ?></li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><?= esc($course['title']) ?></span>
+                                    <a class="btn btn-sm btn-outline-primary" href="<?= base_url('course/' . $course['id'] . '/materials') ?>">Materials</a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
