@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($title ?? 'LMS') ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -32,7 +33,6 @@
                                 <a class="nav-link" href="<?= base_url('admin/courses') ?>">Manage Courses</a>
                             </li>
                             
-                          
 
                         <!-- Teacher links -->
                         <?php elseif ($session->get('role') === 'teacher'): ?>
@@ -57,6 +57,15 @@
                 <!-- Right Side User Info / Auth Links -->
                 <ul class="navbar-nav ms-auto align-items-center">
                     <?php if ($session->get('isLoggedIn')): ?>
+                        <li class="nav-item dropdown me-2">
+                            <a class="nav-link position-relative" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="bi bi-bell" aria-hidden="true"></span>
+                                <span id="notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
+                            </a>
+                            <div id="notif-menu" class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notifDropdown" style="min-width: 320px;">
+                                <div class="p-3 text-center text-muted">No notifications</div>
+                            </div>
+                        </li>
                         <li class="nav-item d-flex align-items-center">
                             <span class="navbar-text text-white me-3 fw-semibold">
                                 <?= esc($session->get('name')) ?> 
