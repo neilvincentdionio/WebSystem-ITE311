@@ -55,3 +55,7 @@ $routes->get('/materials/download/(:num)', 'Materials::download/$1');
 
 // Optional: Course materials listing for enrolled students
 $routes->get('/course/(:num)/materials', 'Materials::listing/$1');
+
+// Notifications API
+$routes->get('/notifications', 'Notifications::get');
+$routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1');
