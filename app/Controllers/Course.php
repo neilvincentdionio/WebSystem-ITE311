@@ -2,20 +2,37 @@
 
 namespace App\Controllers;
 
+use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
 use App\Models\NotificationModel;
 use CodeIgniter\Controller;
 
 class Course extends BaseController
 {
+    protected $courseModel;
     protected $enrollmentModel;
     protected $db;
 
     public function __construct()
     {
+        $this->courseModel = new CourseModel();
         $this->enrollmentModel = new EnrollmentModel();
         $this->db = \Config\Database::connect();
         helper(['url', 'form', 'session']);
+    }
+
+    /**
+     * Display courses listing page with search interface
+     */
+    public function index()
+    {
+        // Get all courses for initial display
+        $courses = $this->courseModel->findAll();
+        
+        return view('courses/index', [
+            'courses' => $courses,
+            'title' => 'Courses - LMS'
+        ]);
     }
 
     /**
@@ -92,5 +109,42 @@ class Course extends BaseController
                 'message' => 'Failed to enroll. Please try again.'
             ]);
         }
+    }
+
+    /**
+     * Search courses by title or description
+     * Supports both AJAX (JSON) and regular (view) requests
+     */
+    public function search()
+    {
+        // Retrieve the search term from GET request
+        $searchTerm = $this->request->getGet('search_term');
+
+        // 2. If a search term is provided, apply LIKE queries
+        if (!empty($searchTerm)) {
+            $this->courseModel->like('title', $searchTerm);
+            $this->courseModel->orLike('description', $searchTerm);
+        }
+
+        // Fetch courses based on applied conditions (or all if no search term)
+        $courses = $this->courseModel->findAll();
+
+        // Check if the request is AJAX
+        if ($this->request->isAJAX()) {
+            // If AJAX, return structured JSON response
+            return $this->response->setJSON([
+                'success' => true,
+                'term' => $searchTerm ?? '',
+                'count' => count($courses),
+                'results' => $courses
+            ]);
+        }
+
+        // If not AJAX, render a view with the results
+        return view('courses/search_results', [
+            'courses' => $courses, 
+            'searchTerm' => $searchTerm,
+            'title' => 'Course Search - LMS'
+        ]);
     }
 }

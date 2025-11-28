@@ -78,7 +78,9 @@
 
             <!-- Available Courses -->
             <div class="card mb-4">
-                <div class="card-header bg-primary text-white">Available Courses</div>
+                <div class="card-header bg-primary text-white">
+                    Available Courses
+                </div>
                 <div class="card-body" id="availableCourses">
                     <?php if (empty($roleData['availableCourses'])): ?>
                         <p class="text-muted">No courses available at the moment.</p>

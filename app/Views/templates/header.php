@@ -51,9 +51,10 @@
                         <?php elseif ($session->get('role') === 'student'): ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('announcements') ?>">Announcements</a>
-                            </li>   
-                            
-
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('courses') ?>">Courses</a>
+                            </li>
                         <?php endif; ?>
                     <?php endif; ?>
                 </ul>
@@ -61,17 +62,17 @@
                 <!-- Right Side User Info / Auth Links -->
                 <ul class="navbar-nav ms-auto align-items-center">
                     <?php if ($session->get('isLoggedIn')): ?>
-                        <li class="nav-item dropdown me-2">
-                            <a class="nav-link dropdown-toggle position-relative" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false">
-                                <span class="bi bi-bell" aria-hidden="true"></span>
-                                <span id="notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="pointer-events: none;">0</span>
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link position-relative" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="outside" aria-expanded="false">
+                                <i class="bi bi-bell fs-5"></i>
+                                <span id="notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="pointer-events: none; font-size: 0.65rem; padding: 0.25em 0.5em; min-width: 18px;">0</span>
                             </a>
-                            <div id="notif-menu" class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notifDropdown" style="min-width: 320px; z-index: 2000;">
+                            <div id="notif-menu" class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notifDropdown" style="min-width: 320px; z-index: 2000; margin-top: 0.5rem;">
                                 <div class="p-3 text-center text-muted">No notifications</div>
                             </div>
                         </li>
-                        <li class="nav-item d-flex align-items-center">
-                            <span class="navbar-text text-white me-3 fw-semibold">
+                        <li class="nav-item me-3 d-flex align-items-center">
+                            <span class="navbar-text text-white fw-semibold mb-0">
                                 <?= esc($session->get('name')) ?> 
                                 (<?= ucfirst(esc($session->get('role'))) ?>)
                             </span>

@@ -30,6 +30,16 @@ $routes->get('/announcements', 'Announcement::index');
 $routes->get('course/enroll', 'Course::enroll');
 $routes->post('/course/enroll', 'Course::enroll');
 
+// Course Search
+$routes->get('course/search', 'Course::search');
+$routes->post('course/search', 'Course::search');
+
+// Courses listing and search
+$routes->get('/courses/search', 'Course::search');
+$routes->post('/courses/search', 'Course::search');
+$routes->get('/courses', 'Course::index');
+$routes->get('/courses/index', 'Course::index');
+
 // Teacher Routes (Protected by roleauth filter)
 $routes->group('teacher', ['filter' => 'roleauth:teacher'], function($routes) {
     $routes->get('dashboard', 'Teacher::dashboard');
