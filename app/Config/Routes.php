@@ -52,6 +52,18 @@ $routes->group('admin', ['filter' => 'roleauth:admin'], function($routes) {
      // Add more admin-only routes here
 });
 
+// User Management Routes (Admin only)
+$routes->group('users', ['filter' => 'roleauth:admin'], function($routes) {
+    $routes->get('/', 'UserController::index');
+    $routes->get('create', 'UserController::create');
+    $routes->post('store', 'UserController::store');
+    $routes->get('edit/(:num)', 'UserController::edit/$1');
+    $routes->post('update/(:num)', 'UserController::update/$1');
+    $routes->get('delete/(:num)', 'UserController::delete/$1');
+    $routes->get('trash', 'UserController::trash');
+    $routes->get('restore/(:num)', 'UserController::restore/$1');
+});
+
 $routes->group('student', ['filter' => 'roleauth:student'], function($routes) {
     $routes->get('dashboard', 'Student::dashboard');
     // Add more student-only routes here

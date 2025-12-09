@@ -36,6 +36,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('admin/courses') ?>">Manage Courses</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('users') ?>">User Management</a>
+                            </li>
                             
 
                         <!-- Teacher links -->
