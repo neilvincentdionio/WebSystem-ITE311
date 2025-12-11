@@ -90,11 +90,12 @@ class UserController extends BaseController
         // Validation rules
         $rules = [
             'name' => [
-                'rules' => 'required|min_length[3]|max_length[100]',
+                'rules' => 'required|min_length[3]|max_length[100]|alpha_space',
                 'errors' => [
                     'required' => 'Name is required.',
                     'min_length' => 'Name must be at least 3 characters.',
-                    'max_length' => 'Name cannot exceed 100 characters.'
+                    'max_length' => 'Name cannot exceed 100 characters.',
+                    'alpha_space' => 'Name can only contain letters and spaces. Special characters are not allowed.'
                 ]
             ],
             'email' => [
@@ -222,11 +223,12 @@ class UserController extends BaseController
         // Validation rules
         $rules = [
             'name' => [
-                'rules' => 'required|min_length[3]|max_length[100]',
+                'rules' => 'required|min_length[3]|max_length[100]|alpha_space',
                 'errors' => [
                     'required' => 'Name is required.',
                     'min_length' => 'Name must be at least 3 characters.',
-                    'max_length' => 'Name cannot exceed 100 characters.'
+                    'max_length' => 'Name cannot exceed 100 characters.',
+                    'alpha_space' => 'Name can only contain letters and spaces. Special characters are not allowed.'
                 ]
             ],
             'email' => [
