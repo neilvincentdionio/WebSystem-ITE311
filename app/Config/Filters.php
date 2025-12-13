@@ -33,7 +33,8 @@ class Filters extends BaseFilters
     'forcehttps'     => ForceHTTPS::class,
     'pagecache'      => PageCache::class,
     'performance'    => PerformanceMetrics::class,
-    'roleauth'       => \App\Filters\RoleAuth::class, 
+    'roleauth'       => \App\Filters\RoleAuth::class,
+    'auth'           => \App\Filters\AuthFilter::class, // Updated to use AuthFilter class
 ];
 
 

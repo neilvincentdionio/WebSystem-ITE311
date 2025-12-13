@@ -26,15 +26,22 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php $session = session(); ?>
                     <?php if ($session->get('isLoggedIn')): ?>
-                        <li class="nav-item">
-                            <?php $role = strtolower((string)$session->get('role')); $dashUrl = ($role === 'admin') ? 'admin/dashboard' : 'dashboard'; ?>
-                            <a class="nav-link" href="<?= base_url($dashUrl) ?>">Dashboard</a>
-                        </li>
-
                         <!-- Admin links -->
                         <?php if ($session->get('role') === 'admin'): ?>
                             <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('admin/dashboard') ?>">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('admin/courses') ?>">Manage Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('materials') ?>">Upload Material</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('admin/enrollments') ?>">Enrollment Management</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('admin/schedules') ?>">Manage Schedules</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('users') ?>">User Management</a>
@@ -44,19 +51,41 @@
                         <!-- Teacher links -->
                         <?php elseif ($session->get('role') === 'teacher'): ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('my_courses') ?>">My Courses</a>
+                                <a class="nav-link" href="<?= base_url('teacher/dashboard') ?>">Dashboard</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('my_students') ?>">My Students</a>
+                                <a class="nav-link" href="<?= base_url('teacher/courses') ?>">My Courses</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('teacher/schedule') ?>">My Schedule</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('materials') ?>">Upload Material</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('teacher/students') ?>">My Students</a>
+                            </li>
+                
 
                         <!-- Student links -->
                         <?php elseif ($session->get('role') === 'student'): ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('announcements') ?>">Announcements</a>
+                                <a class="nav-link" href="<?= base_url('student/dashboard') ?>">Dashboard</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('courses') ?>">Courses</a>
+                                <a class="nav-link" href="<?= base_url('student/my-schedule') ?>">My Schedule</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('student/my-courses') ?>">My Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('student/materials') ?>">Materials</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('student/enrollment-requests') ?>">Enrollment Requests</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('courses') ?>">Browse Courses</a>
                             </li>
                         <?php endif; ?>
                     <?php endif; ?>

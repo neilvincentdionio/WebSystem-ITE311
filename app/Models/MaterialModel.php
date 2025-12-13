@@ -8,7 +8,7 @@ class MaterialModel extends Model
 {
     protected $table = 'materials';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['course_id', 'file_name', 'file_path', 'created_at'];
+    protected $allowedFields = ['course_id', 'exam_type', 'file_name', 'file_path', 'created_at'];
     protected $useTimestamps = false;
     protected $returnType = 'array';
 

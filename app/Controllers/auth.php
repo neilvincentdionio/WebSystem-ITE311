@@ -68,7 +68,7 @@ class Auth extends BaseController
             // Redirect based on user role
             switch ($user['role']) {
                 case 'student':
-                    return redirect()->to('/announcements')
+                    return redirect()->to('/student/dashboard')
                                      ->with('success', 'Welcome back, ' . $user['name'] . '!');
                 case 'teacher':
                     return redirect()->to('/teacher/dashboard')
@@ -103,50 +103,20 @@ class Auth extends BaseController
         return redirect()->to('/auth/login')->with('error', 'Please login first.');
     }
 
-    $userModel       = new \App\Models\UserModel();
-    $enrollmentModel = new \App\Models\EnrollmentModel();
-    $db              = \Config\Database::connect();
-
+    $userModel = new \App\Models\UserModel();
     $user = $userModel->find($session->get('id'));
     $role = $user['role'];
 
-    // Default roleData
-    $roleData = [
-        'message'          => '',
-        'users'            => [],
-        'myCourses'        => [],
-        'enrolledCourses'  => [],
-        'availableCourses' => [],
-    ];
-
+    // Redirect to role-specific dashboard
     if ($role === 'admin') {
-        $roleData['message'] = 'You have full administrator access.';
-        $roleData['users']   = $userModel->findAll();
+        return redirect()->to('/admin/dashboard');
     } elseif ($role === 'teacher') {
-        $roleData['message']   = 'You can manage your classes and students here.';
-        $roleData['myCourses'] = []; // Populate later if needed
+        return redirect()->to('/teacher/dashboard');
     } elseif ($role === 'student') {
-        $roleData['message'] = 'You can view your enrolled courses and progress.';
-
-        // Fetch enrolled courses
-        $roleData['enrolledCourses'] = $enrollmentModel->getUserEnrollments($user['id']);
-
-        // Fetch all courses directly from DB
-        $allCourses = $db->table('courses')->get()->getResultArray();
-
-        // Filter out enrolled courses to get available courses
-        $enrolledIds = array_column($roleData['enrolledCourses'], 'id');
-        $roleData['availableCourses'] = array_filter($allCourses, function($course) use ($enrolledIds) {
-            return !in_array($course['id'], $enrolledIds);
-        });
+        return redirect()->to('/student/dashboard');
+    } else {
+        return redirect()->to('/auth/login')->with('error', 'Invalid user role.');
     }
-
-    return view('auth/dashboard', [
-        'title'    => 'User Dashboard',
-        'user'     => $user,
-        'role'     => $role,
-        'roleData' => $roleData,
-    ]);
 }
 
 }

@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\CourseModel;
-use App\Models\EnrollmentModel;
+use App\Models\StudentEnrollmentModel;
 use App\Models\NotificationModel;
 use CodeIgniter\Controller;
 
@@ -16,7 +16,7 @@ class Course extends BaseController
     public function __construct()
     {
         $this->courseModel = new CourseModel();
-        $this->enrollmentModel = new EnrollmentModel();
+        $this->enrollmentModel = new StudentEnrollmentModel();
         $this->db = \Config\Database::connect();
         helper(['url', 'form', 'session']);
     }
@@ -78,8 +78,9 @@ class Course extends BaseController
 
         // Insert enrollment
         $data = [
-            'user_id'     => $user_id,
+            'student_id'  => $user_id,
             'course_id'   => $course_id,
+            'status'      => 'pending',
             'enrolled_at' => date('Y-m-d H:i:s')
         ];
 
@@ -109,6 +110,71 @@ class Course extends BaseController
                 'message' => 'Failed to enroll. Please try again.'
             ]);
         }
+    }
+
+    /**
+     * Display course details page
+     */
+    public function show($id = null)
+    {
+        if (!$id) {
+            return redirect()->to('courses')->with('error', 'Course not found.');
+        }
+
+        // Get course details
+        $course = $this->courseModel->find($id);
+        if (!$course) {
+            return redirect()->to('courses')->with('error', 'Course not found.');
+        }
+
+        // Get teacher information
+        $teacher = null;
+        if (!empty($course['teacher_id'])) {
+            $teacher = $this->db->table('users')
+                ->where('id', $course['teacher_id'])
+                ->get()
+                ->getRowArray();
+        }
+
+        // Get materials count
+        $materialsCount = $this->db->table('materials')
+            ->where('course_id', $id)
+            ->countAllResults();
+
+        // Get enrolled students count
+        $enrolledCount = $this->db->table('student_enrollments')
+            ->where('course_id', $id)
+            ->where('status', 'approved')
+            ->countAllResults();
+
+        // Check if current student is enrolled
+        $session = session();
+        $isEnrolled = false;
+        $enrollmentStatus = null;
+        
+        if ($session->get('isLoggedIn') && strtolower($session->get('role')) === 'student') {
+            $studentId = $session->get('id');
+            $enrollment = $this->db->table('student_enrollments')
+                ->where('course_id', $id)
+                ->where('student_id', $studentId)
+                ->get()
+                ->getRowArray();
+            
+            if ($enrollment) {
+                $isEnrolled = true;
+                $enrollmentStatus = $enrollment['status'];
+            }
+        }
+
+        return view('courses/show', [
+            'course' => $course,
+            'teacher' => $teacher,
+            'materialsCount' => $materialsCount,
+            'enrolledCount' => $enrolledCount,
+            'isEnrolled' => $isEnrolled,
+            'enrollmentStatus' => $enrollmentStatus,
+            'title' => 'Course Details - ' . $course['title']
+        ]);
     }
 
     /**

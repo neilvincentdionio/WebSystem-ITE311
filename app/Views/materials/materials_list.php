@@ -1,19 +1,9 @@
 <?= $this->include('templates/header') ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Materials - <?= esc($course['title'] ?? ('Course #' . ($course['id'] ?? ''))) ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-<div class="container mt-4">
+<div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-0">Materials for: <?= esc($course['title'] ?? ('Course #' . ($course['id'] ?? ''))) ?></h3>
-        <?php $role = strtolower((string) (session()->get('role') ?? '')); $backUrl = ($role === 'admin') ? 'admin/dashboard' : 'dashboard'; ?>
-        <a href="<?= base_url($backUrl) ?>" class="btn btn-secondary">Back</a>
+        <a href="<?= base_url('materials') ?>" class="btn btn-secondary">Back to Materials</a>
     </div>
 
     <?php if (session()->getFlashdata('error')): ?>
@@ -44,6 +34,7 @@
         </div>
     <?php endif; ?>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+</html>
 </html>

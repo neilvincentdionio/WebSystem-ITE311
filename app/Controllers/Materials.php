@@ -20,6 +20,43 @@ class Materials extends BaseController
         helper(['form', 'url']);
     }
 
+    // Admin/Teacher: Materials dashboard/index
+    public function index()
+    {
+        $session = session();
+        $isLoggedIn = (bool) $session->get('isLoggedIn');
+        $role = strtolower((string) $session->get('role'));
+        
+        if (!$isLoggedIn) {
+            return redirect()->to(base_url('auth/login'));
+        }
+        
+        if (!in_array($role, ['admin', 'teacher'])) {
+            return redirect()->to(base_url('announcements'))->with('error', 'Access Denied: Insufficient Permissions.');
+        }
+
+        // Get all courses for admin/teacher to manage materials
+        $courses = [];
+        try {
+            $hasCourses = $this->db->query("SHOW TABLES LIKE 'courses'")->getNumRows() > 0;
+            if ($hasCourses) {
+                $builder = $this->db->table('courses');
+                if ($role === 'teacher') {
+                    // Teachers can only see their assigned courses
+                    $builder->where('teacher_id', (int)$session->get('id'));
+                }
+                $courses = $builder->get()->getResultArray();
+            }
+        } catch (\Throwable $e) {
+            log_message('error', 'Materials index error: {err}', ['err' => $e->getMessage()]);
+        }
+
+        return view('materials/materials_index', [
+            'courses' => $courses,
+            'role' => $role
+        ]);
+    }
+
     // Admin/Instructor: Upload material for a course (GET form, POST upload)
     public function upload($course_id)
     {
@@ -59,6 +96,10 @@ class Materials extends BaseController
                 log_message('info', 'Materials upload POST received for course_id={id}', ['id' => (int)$course_id]);
 
                 $rules = [
+                    'exam_type' => [
+                        'label' => 'Exam Type',
+                        'rules' => 'required|in_list[prelim,midterm,finals]'
+                    ],
                     'file' => [
                         'label' => 'Material File',
                         'rules' => 'uploaded[file]|max_size[file,51200]|ext_in[file,pdf,ppt,pptx,doc,docx,xls,xlsx,csv,zip,rar,7z,txt,jpg,jpeg,png]'
@@ -159,6 +200,7 @@ class Materials extends BaseController
 
                 $data = [
                     'course_id'  => (int) $course_id,
+                    'exam_type'  => $this->request->getPost('exam_type'),
                     'file_name'  => $file->getClientName(),
                     'file_path'  => 'uploads/materials/' . $courseFolderName . '/' . $finalName,
                     'created_at' => date('Y-m-d H:i:s'),
@@ -273,7 +315,15 @@ class Materials extends BaseController
         $allowed = in_array($role, ['admin', 'teacher']);
         if (! $allowed) {
             // check enrollment
-            $allowed = $this->enrollments->isAlreadyEnrolled($userId, (int)$material['course_id']);
+            log_message('debug', 'Materials download: Student ID: ' . $userId . ', Course ID: ' . (int)$material['course_id']);
+            $enrollmentCheck = $this->db->table('student_enrollments')
+                ->where('student_id', $userId)
+                ->where('course_id', (int)$material['course_id'])
+                ->where('status', 'approved')
+                ->get()
+                ->getRowArray();
+            $allowed = !empty($enrollmentCheck);
+            log_message('debug', 'Materials download: Enrollment check result: ' . ($allowed ? 'ALLOWED' : 'DENIED'));
         }
 
         if (! $allowed) {

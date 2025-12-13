@@ -35,6 +35,15 @@
             <form method="post" enctype="multipart/form-data" action="<?= base_url('course/' . $course['id'] . '/upload') ?>">
                 <?= csrf_field() ?>
                 <div class="mb-3">
+                    <label for="exam_type" class="form-label">Exam Type</label>
+                    <select class="form-select" id="exam_type" name="exam_type" required>
+                        <option value="">Select exam type...</option>
+                        <option value="prelim">Prelim</option>
+                        <option value="midterm">Midterm</option>
+                        <option value="finals">Finals</option>
+                    </select>
+                </div>
+                <div class="mb-3">
                     <label for="material" class="form-label">Choose file</label>
                     <input class="form-control" type="file" id="material" name="file" accept=".pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.zip,.rar,.7z,.txt,.jpg,.jpeg,.png" required>
                     <div class="form-text">Allowed: pdf, ppt, pptx, doc, docx, xls, xlsx, zip, rar. Max 20MB.</div>

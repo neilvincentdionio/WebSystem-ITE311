@@ -51,11 +51,10 @@
                                                     <i class="bi bi-upload"></i> Upload Materials
                                                 </a>
                                             <?php elseif ($role === 'student'): ?>
-                                                <button class="btn btn-success w-100 enrollBtn" 
-                                                        data-course-id="<?= $course['id'] ?>"
-                                                        data-course-title="<?= esc($course['title']) ?>">
-                                                    <i class="bi bi-plus-circle"></i> Enroll
-                                                </button>
+                                                <a class="btn btn-info w-100" 
+                                                   href="<?= base_url('course/' . $course['id']) ?>">
+                                                    <i class="bi bi-eye"></i> View Course Details
+                                                </a>
                                             <?php endif; ?>
                                         <?php else: ?>
                                             <a class="btn btn-outline-primary w-100" 
@@ -157,8 +156,8 @@ $(document).ready(function() {
                                 html += '<a class="btn btn-primary w-100" href="<?= base_url('course/') ?>' + course.id + '/upload">' +
                                        '<i class="bi bi-upload"></i> Upload Materials</a>';
                             <?php elseif (strtolower((string)session()->get('role')) === 'student'): ?>
-                                html += '<button class="btn btn-success w-100 enrollBtn" data-course-id="' + course.id + '" data-course-title="' + escapeHtml(course.title) + '">' +
-                                       '<i class="bi bi-plus-circle"></i> Enroll</button>';
+                                html += '<a class="btn btn-info w-100" href="<?= base_url('course/') ?>' + course.id + '">' +
+                                       '<i class="bi bi-eye"></i> View Course Details</a>';
                             <?php endif; ?>
                         <?php else: ?>
                             html += '<a class="btn btn-outline-primary w-100" href="<?= base_url('auth/login') ?>">' +
